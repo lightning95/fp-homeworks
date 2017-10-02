@@ -2,18 +2,18 @@ module TestB1And2
     (
     ) where
 
-import Block1And2 (order3
-       , highestBit
-       , highestBit'
-       , smartReplicate
-       , contains
-       , removeAt
-       , removeAt'
-       , collectEvery
-       , stringSum
-       , stringSum'
-       , mergeSort)        
-
+import           Block1And2    (order3
+                               , highestBit
+                               , highestBit'
+                               , smartReplicate
+                               , contains
+                               , removeAt
+                               , removeAt'
+                               , collectEvery
+                               , stringSum
+                               , stringSum'
+                               , mergeSort)        
+import           Control.Monad (replicateM_)
 import           System.Random (newStdGen, randomRs)
 
 main :: IO ()
@@ -90,7 +90,7 @@ main = do
         example <- randomIntList 5 (-10) 10
         putStrLn $ "random: " ++ show example ++ ", sorted: " ++ show (mergeSort example)
 
-    mapM_  id $ take 5 $ repeat f
+    replicateM_ 5 f
 --------------------------------------------------------------------
 -- block 1
 orderTest :: (Int, Int, Int)
@@ -157,6 +157,3 @@ advancedMustFail = ["1+1", "++1", "-+1", "+-1", "1 + 1"]
 ----------------------------------------------
 randomIntList :: Int -> Int -> Int -> IO [Int]
 randomIntList n from to = take n . randomRs (from, to) <$> newStdGen
-
-
-

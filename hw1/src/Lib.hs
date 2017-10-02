@@ -20,8 +20,8 @@ maybeConcat (Just x :xs) = x ++ maybeConcat xs
 
 eitherConcat :: (Monoid a, Monoid b) => [Either a b] -> (a, b)
 eitherConcat []           = (mempty, mempty)
-eitherConcat (Left  x:xs) = (x, mempty) `mappend` (eitherConcat xs)
-eitherConcat (Right x:xs) = (mempty, x) `mappend` (eitherConcat xs)
+eitherConcat (Left  x:xs) = (x, mempty) `mappend` eitherConcat xs
+eitherConcat (Right x:xs) = (mempty, x) `mappend` eitherConcat xs
 ----------------------------------------
 data NonEmpty a = a :| [a]
     deriving (Show)
@@ -73,5 +73,5 @@ instance Semigroup b => Semigroup (Arrow a b) where
     (<>) = Arrow ... (<>) `on` getArrow
 
 instance Monoid b => Monoid (Arrow a b) where
-    mempty  = Arrow $ \_ -> mempty
+    mempty  = Arrow $ const mempty
     mappend = Arrow ... mappend `on` getArrow

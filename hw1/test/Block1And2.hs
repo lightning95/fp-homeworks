@@ -15,6 +15,7 @@ module Block1And2
        , mergeSort
        ) where
 
+import           Control.Arrow (second)
 import           Data.Char     (isDigit)
 import           Data.Function (fix, on)
 import           Data.List     (elem, sort)
@@ -37,8 +38,8 @@ highestBit' x = if x < 1 then error "argument < 1" else
     fix (\f c st -> if c * 2 > x then (c, st) else f (c * 2) (st + 1)) 1 0
 
 smartReplicate :: [Int] -> [Int]
-smartReplicate = concat . map (\x -> replicate x x)
---smartReplicate = concat . map (\x -> stimes x [x]) import Data.Semigroup (Semigroup)
+smartReplicate = concatMap (\x -> replicate x x)
+--smartReplicate = concatMap (\x -> stimes x [x]) import Data.Semigroup (Semigroup)
 
 contains :: Eq a => a -> [[a]] -> [[a]]
 contains = filter . elem
@@ -52,12 +53,12 @@ removeAt i (x:xs) = x : removeAt (i - 1) xs
 removeAt' :: Int -> [a] -> (Maybe a, [a])
 removeAt' _ []     = (Nothing, [])
 removeAt' 0 (x:xs) = (Just x, xs)
-removeAt' i (x:xs) = (\(mb, ls) -> (mb, x : ls)) $ removeAt' (i - 1) xs                     
+removeAt' i (x:xs) = second ((:) x) $ removeAt' (i - 1) xs                     
 
 collectEvery :: Int -> [a] -> ([a], [a])
 collectEvery k xs = case splitAt (k - 1) xs of
                         t@(y, []) -> t
-                        (y, h:hs) -> (y, [h]) `mappend` (collectEvery k hs)
+                        (y, h:hs) -> (y, [h]) `mappend` collectEvery k hs
 
 stringSum :: String -> Int
 stringSum = sum . map read . words

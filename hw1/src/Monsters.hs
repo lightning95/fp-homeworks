@@ -3,11 +3,11 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE PartialTypeSignatures      #-}
-{-# LANGUAGE RecordWildCards            #-}
 {-# LANGUAGE ScopedTypeVariables        #-}
 
 module Monsters
        (
+        gloriousBattle
        ) where
 
 import           Data.Semigroup (Semigroup, (<>))
@@ -19,10 +19,10 @@ data Stats = Stats
     -- , defence :: Int
     } deriving (Show)
 
-data Hero = Hero { getStats :: Stats }
+newtype Hero = Hero { getStats :: Stats }
     deriving (Show)
           
-data Monster = Monster { info :: Stats }
+newtype Monster = Monster { info :: Stats }
     deriving (Show)  
 
 class Unit a where
