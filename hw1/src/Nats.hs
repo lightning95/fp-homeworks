@@ -1,5 +1,9 @@
 module Nats
-       (
+       ( Nat (..)
+       , isEven
+       , divNat
+       , modNat
+       , gcdNat
        ) where
 
 data Nat = Z | S Nat 

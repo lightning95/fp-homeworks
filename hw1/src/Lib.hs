@@ -1,5 +1,11 @@
 module Lib
-       (
+       ( splitOn
+       , joinWith
+       , maybeConcat
+       , eitherConcat
+       , NonEmpty (..) 
+       , Endo (..)
+       , Arrow (..)
        ) where
 
 import           Data.Function  (on)

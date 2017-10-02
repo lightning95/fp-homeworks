@@ -26,7 +26,6 @@ library
                      , Monsters
   ghc-options:         -Wall
   build-depends:       base >= 4.9 && < 5
-                     , random
   default-language:    Haskell2010
 
 test-suite hw1-test

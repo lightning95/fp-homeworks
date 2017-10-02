@@ -19,10 +19,7 @@ import           Control.Arrow (second)
 import           Data.Char     (isDigit)
 import           Data.Function (fix, on)
 import           Data.List     (elem, sort)
-import           System.Random (newStdGen, randomRs)
 
-randomIntList :: Int -> Int -> Int -> IO [Int]
-randomIntList n from to = take n . randomRs (from, to) <$> newStdGen
 --------------------------------------------------------------------
 -- block 1
 order3 :: Ord a => (a, a, a) -> (a, a, a)
@@ -57,7 +54,7 @@ removeAt' i (x:xs) = second ((:) x) $ removeAt' (i - 1) xs
 
 collectEvery :: Int -> [a] -> ([a], [a])
 collectEvery k xs = case splitAt (k - 1) xs of
-                        t@(y, []) -> t
+                        t@(_, []) -> t
                         (y, h:hs) -> (y, [h]) `mappend` collectEvery k hs
 
 stringSum :: String -> Int

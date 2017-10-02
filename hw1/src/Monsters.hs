@@ -6,12 +6,14 @@
 {-# LANGUAGE ScopedTypeVariables        #-}
 
 module Monsters
-       (
-        gloriousBattle
+       ( Hero (..)
+       , Monster (..) 
+       , gloriousBattle
+       , isAlive
        ) where
 
 import           Data.Semigroup (Semigroup, (<>))
-import           Prelude        hiding (log)
+import           Prelude        hiding (log, round)
 
 data Stats = Stats
     { hp     :: Int
@@ -53,8 +55,8 @@ newtype Log = Log [String]
     deriving (Show, Semigroup)    
 
 gloriousBattle :: Hero -> Monster -> Result
-gloriousBattle h m = 
-    let (res, end) = round h m
+gloriousBattle hh mm = 
+    let (res, end) = round hh mm
     in if end then res
     else res <> gloriousBattle (hero res) (monster res)
     where   

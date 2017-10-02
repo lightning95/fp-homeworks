@@ -1,5 +1,11 @@
 module Tree
-       (
+       ( Tree (..)
+       , empty
+       , size
+       , find
+       , insert
+       , fromList
+       , toList 
        ) where
 
 import           Data.Semigroup (Semigroup, (<>))
