@@ -44,7 +44,7 @@ sub (S x) (S y) = x `sub` y
 
 ----hard mode "ON"
 isEven :: Nat -> Bool
-isEven Z = True
+isEven Z     = True
 isEven (S x) = not $ isEven x
 --isEven x = x `modNat` 2 == 0
 

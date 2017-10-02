@@ -7,7 +7,7 @@ module Block1And2
 
 import           Data.Char     (isDigit)
 import           Data.Function (fix, on)
-import           Data.List     (sort, elem)
+import           Data.List     (elem, sort)
 import           System.Random (newStdGen, randomRs)
 
 randomIntList :: Int -> Int -> Int -> IO [Int]

@@ -11,11 +11,11 @@ module Monsters
        ) where
 
 import           Data.Semigroup (Semigroup, (<>))
-import           Prelude hiding (log)
+import           Prelude        hiding (log)
 
 data Stats = Stats
-    { hp      :: Int
-    , attack  :: Int
+    { hp     :: Int
+    , attack :: Int
     -- , defence :: Int
     } deriving (Show)
 

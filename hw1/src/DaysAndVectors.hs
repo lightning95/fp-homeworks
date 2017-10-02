@@ -3,7 +3,7 @@ module DaysAndVectors
        ) where
 
 import           Data.Function (on)
-import           Data.Ix       (Ix, index, inRange)
+import           Data.Ix       (Ix, inRange, index)
 
 --block 3
 data DayOfWeek = Mo | Tu | We | Th | Fr | Sa | Su 
