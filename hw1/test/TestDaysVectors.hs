@@ -55,6 +55,24 @@ main = do
 
     putStr "daysToParty Mo -> "
     print daysToPartyTest3
+
+    putStrLn "\nVectors"
+
+    putStr "(1, 1) + (0, 0) -> "
+    print $ (Vector2D 1 1) `addV` Vector2D 0 0
+
+    putStr "|(1.0, 1.0)| -> "
+    print $ getLength $ Vector2D 1.0 1.0
+
+    putStr "(1, 2) * (3, 4, 5) -> "
+    print $ (Vector2D 1 2) `dotProduct` (Vector3D 3 4 5)
+
+    putStr "(3, 5) `distance` (4, 6) -> "
+    print $ (Vector2D 3 5) `distance` (Vector2D 4 6)
+
+
+    putStr "(1, 2, 3) x (1, 2, 3) -> "
+    print $ (Vector3D 1 2 3) `crossProduct` (Vector3D 1 2 3)
 ------------------
 nextDayTest1 :: DayOfWeek    
 nextDayTest1 = nextDay Mo

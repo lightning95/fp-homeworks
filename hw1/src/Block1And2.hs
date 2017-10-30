@@ -29,7 +29,6 @@ highestBit :: Int -> Int
 highestBit x = if x < 1 then error "argument < 1" else 
     fix (\f c -> if c * 2 > x then c else f (c * 2)) 1
 
-
 highestBit' :: Int -> (Int, Int)               
 highestBit' x = if x < 1 then error "argument < 1" else
     fix (\f c st -> if c * 2 > x then (c, st) else f (c * 2) (st + 1)) 1 0

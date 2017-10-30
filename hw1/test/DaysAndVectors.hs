@@ -47,7 +47,7 @@ unpackVector [x, y]    = Vector2D x y
 unpackVector [x, y, z] = Vector3D x y z
 unpackVector _         = error "not 2 or 3 dimensions"
 
-getLength :: (Floating a, Num a) => Vector a -> a
+getLength :: Floating a => Vector a -> a
 getLength = sqrt . sum . map (^2) . packVector
 
 zipWith' :: (Num a, Num b) => (a -> b -> c) -> [a] -> [b] -> [c]

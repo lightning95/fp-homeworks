@@ -87,8 +87,8 @@ main = do
 
     let f :: IO ()
         f = do
-        example <- randomIntList 5 (-10) 10
-        putStrLn $ "random: " ++ show example ++ ", sorted: " ++ show (mergeSort example)
+            example <- randomIntList 5 (-10) 10
+            putStrLn $ "random: " ++ show example ++ ", sorted: " ++ show (mergeSort example)
 
     replicateM_ 5 f
 --------------------------------------------------------------------

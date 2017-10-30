@@ -57,7 +57,7 @@ instance Foldable Tree where
                              foldMap f r
     -- foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
     foldr _ z Leaf         = z
-    foldr f z (Node c l r) = foldr f (f c (foldr f z r)) l
+    foldr f z (Node c l r) = foldr f (c `f` foldr f z r) l
 
 toList :: Tree a -> [a]
 toList Leaf         = []
