@@ -2,23 +2,17 @@
 {-# LANGUAGE PartialTypeSignatures      #-}
 {-# LANGUAGE ScopedTypeVariables        #-}
 
-
 module MonadParser
   ( parseLetExpr
   , parseInput
   , optimize
   , getExprs
+  , doAll
   ) where
-
 
 import           AParser       (Parser (..), char, posInt, (<|>))
 import qualified Data.Map.Lazy as Map
 import           SExpr         (ident, spaces, zeroOrMore)
-
-instance Monad Parser where
-  Parser p >>= f = Parser $ \s -> case p s of
-    Just (res, rest) -> runParser (f res) rest
-    _                -> Nothing
 
 type Ident = String
 
@@ -55,12 +49,15 @@ getExprs = let f (Just (le, "")) = le
 optimize :: [LetExpr] -> [LetExpr]
 optimize = go Map.empty
   where
-    go :: (Map.Map Ident Integer) -> [LetExpr] -> [LetExpr]
-    go _ [] = []
-    go m ((I name v):xs) = (I name [N res]):(go (Map.insert name res m) xs)
+    go :: Map.Map Ident Integer -> [LetExpr] -> [LetExpr]
+    go _ []            = []
+    go m (I name v:xs) = I name [N res] : go (Map.insert name res m) xs
       where
         parse (R s) = case Map.lookup s m of
                         Just x -> x
                         _      -> error "No value in a map"
         parse (N x) = x
-        res = sum $ map parse v
+        res         = sum $ map parse v
+
+doAll :: Input -> [LetExpr]
+doAll = optimize . getExprs . parseInput

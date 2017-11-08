@@ -90,17 +90,17 @@ instance Cat.Category (~>) where
   g . f = partial $ (f `apply`) >=> (g `apply`)
 --   g . f = partial $ \x -> apply f x >>= (g `apply`)
 -- -------------------------
-bin :: Int -> [[Int]]
+bin :: Int -> [ [ Int ] ]
 bin = flip replicateM [0, 1]
 
-combinations :: Int -> Int -> [[Int]]
-combinations _ 0 = [[]]
+combinations :: Int -> Int -> [ [ Int ] ]
+combinations _ 0 = [ [] ]
 combinations 0 _ = []
-combinations n k = ((n:) <$> combinations (n - 1) (k - 1)) ++ combinations (n - 1) k
+combinations n k = (( ++ [n]) <$> combinations (n - 1) (k - 1)) ++ combinations (n - 1) k
 
-permutations :: [a] -> [[a]]
-permutations [] = [[]]
+permutations :: [ a ] -> [ [ a ] ]
+permutations []     = [ [] ]
 permutations (x:xs) = permutations xs >>= \t -> f [] t
   where
-    f a []     = [a ++ [x]]
-    f a (b:bs) = (a ++ [x] ++ (b:bs)): f (a++[b]) bs
+    f a []     = [ a ++ [ x ] ]
+    f a (b:bs) = (a ++ [ x ] ++ (b:bs)): f (a ++ [ b ]) bs

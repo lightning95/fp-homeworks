@@ -65,3 +65,8 @@ instance Alternative Parser where
 
 intOrUppercase :: Parser ()
 intOrUppercase = posInt *> pure () <|> satisfy isUpper *> pure ()
+
+instance Monad Parser where
+  Parser p >>= f = Parser $ \s -> case p s of
+    Just (res, rest) -> runParser (f res) rest
+    _                -> Nothing

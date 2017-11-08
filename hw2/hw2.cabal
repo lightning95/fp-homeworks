@@ -18,8 +18,7 @@ tested-with:         GHC == 8.0.1
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Lib
-                     , OptionalMonads
+  exposed-modules:     OptionalMonads
   ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base >= 4.9 && < 5,
                        containers >= 0.5.7.1,
@@ -31,7 +30,7 @@ test-suite hw2-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  other-modules:       OptionalMonadsSpec
+  other-modules:       OptionalMonadsSpec, NonDetEvalSpec
   build-depends:       base
                      , containers >= 0.5.7.1
                      , hspec
