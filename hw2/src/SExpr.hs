@@ -4,6 +4,9 @@ module SExpr
     , spaces
     , ident
     , parseSExpr
+    , SExpr(..)
+    , Atom(..)
+    , Ident
     ) where
 
 import           AParser   (Parser, char, posInt, satisfy, (<|>))
@@ -25,11 +28,11 @@ type Ident = String
 
 data Atom = N Integer
           | I Ident
-          deriving (Show)
+          deriving (Show, Eq)
 
 data SExpr = A Atom
            | Comb [SExpr]
-           deriving (Show)
+           deriving (Show, Eq)
 
 parseSExpr :: Parser SExpr
 parseSExpr = spaces *> (parseAtom <|> parseComb) <* spaces

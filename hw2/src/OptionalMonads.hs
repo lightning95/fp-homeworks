@@ -1,4 +1,6 @@
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE ExplicitForAll      #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeOperators       #-}
 
 module OptionalMonads
     ( Expr (..)
@@ -38,12 +40,15 @@ eval (Const x) = pure x
 eval (Sum x y) = (+) <$> eval x <*> eval y
 eval (Sub x y) = (-) <$> eval x <*> eval y
 eval (Mul x y) = (*) <$> eval x <*> eval y
-eval (Div x y) =
-  let right = (eval y >>= \a -> if a == 0 then Left DivisionByZero else pure a)
-  in div <$> eval x <*> right
-eval (Pow x y) =
-  let right = (eval y >>= \a -> if a < 0 then Left PowerToNegative else pure a)
-  in (^) <$> eval x <*> right
+eval (Div x y) = div <$> eval x <*> right
+  where
+    right :: Either ArithmeticError Int
+    right = eval y >>= \a -> if a == 0 then Left DivisionByZero else pure a
+
+eval (Pow x y) = (^) <$> eval x <*> right
+  where
+    right :: Either ArithmeticError Int
+    right = eval y >>= \a -> if a < 0 then Left PowerToNegative else pure a
 
 ------------------------------------
 data a ~> b
@@ -64,7 +69,7 @@ apply (Defaulted p b) a = case apply p a of
 
 applyOrElse :: (a ~> b) -> a -> b -> b
 applyOrElse (Partial f)     a b = fromMaybe b $ f a
-applyOrElse (Defaulted f d) a _ = applyOrElse f a d -- use d or b?
+applyOrElse (Defaulted f d) a _ = applyOrElse f a d
 
 withDefault :: (a ~> b) -> b -> (a ~> b)
 withDefault (Defaulted p _) = Defaulted p
@@ -85,22 +90,25 @@ orElse f g = partial $ liftM2 (<|>) (f `apply`) (g `apply`)
 -- Create a new partial function where the domain is the combination
 -- of both partial functions. Priority is given to the first partial function
 -- in case of conflict.
+
 instance Cat.Category (~>) where
   id    = partial Just
   g . f = partial $ (f `apply`) >=> (g `apply`)
 --   g . f = partial $ \x -> apply f x >>= (g `apply`)
--- -------------------------
+
+----------------------------
 bin :: Int -> [ [ Int ] ]
-bin = flip replicateM [0, 1]
+bin = flip replicateM [ 0, 1 ]
 
 combinations :: Int -> Int -> [ [ Int ] ]
 combinations _ 0 = [ [] ]
 combinations 0 _ = []
-combinations n k = (( ++ [n]) <$> combinations (n - 1) (k - 1)) ++ combinations (n - 1) k
+combinations n k = ((++ [n]) <$> combinations (n - 1) (k - 1)) ++ combinations (n - 1) k
 
-permutations :: [ a ] -> [ [ a ] ]
-permutations []     = [ [] ]
-permutations (x:xs) = permutations xs >>= \t -> f [] t
+permutations :: forall a . [ a ] -> [ [ a ] ]
+permutations []       = [ [] ]
+permutations (x : xs) = permutations xs >>= \t -> f [] t
   where
-    f a []     = [ a ++ [ x ] ]
-    f a (b:bs) = (a ++ [ x ] ++ (b:bs)): f (a ++ [ b ]) bs
+    f :: [a] -> [a] -> [ [ a ] ]
+    f a []       = [a ++ [ x ]]
+    f a (b : bs) = (a ++ [ x ] ++ (b : bs)): f (a ++ [ b ]) bs
