@@ -1,4 +1,4 @@
-module PartialFunctions where
+module PartialFunctionsProofs where
 
 -- "identity/left" forall p .
 --                 id . p = p

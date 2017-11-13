@@ -35,7 +35,7 @@ posInt = Parser f
       | otherwise = Just (read ns, rest)
       where (ns, rest) = span isDigit xs
 
-first :: (a -> b) -> (a,c) -> (b,c)
+first :: (a -> b) -> (a, c) -> (b, c)
 first f (a, c) = (f a, c)
 
 instance Functor Parser where
@@ -45,8 +45,8 @@ instance Functor Parser where
 instance Applicative Parser where
   pure a                  = Parser $ \s -> Just (a, s)
   Parser p1 <*> Parser p2 = Parser $ \s -> case p1 s of
-      Just (res, rest) -> first res <$> p2 rest
-      _                -> Nothing
+      Just (f, rest) -> first f <$> p2 rest
+      _              -> Nothing
 
 abParser :: Parser (Char, Char)
 abParser = (,) <$> char 'a' <*> char 'b'

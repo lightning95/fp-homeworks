@@ -3,7 +3,7 @@
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE UndecidableInstances  #-}
 
-module BaseTypeClassesChaotic
+module BTCChaotic
   ( Identity (..)
   , Const (..)
   ) where
@@ -22,7 +22,7 @@ instance Applicative Identity where
   (<*>) (Identity f) = fmap f
 
 instance Foldable Identity where
-  -- foldr :: (a -> b -> b) -> b -> Identity a -> b
+-- foldr :: (a -> b -> b) -> b -> Identity a -> b
   foldr f b (Identity x) = f x b
 
 instance Traversable Identity where
@@ -70,27 +70,28 @@ instance Foldable Tree where
   foldr f z (Node c l r) = foldr f (c `f` foldr f z r) l
 
 instance Traversable Tree where
-  -- traverse :: (a -> f b) -> Tree a -> f (Tree b)
+-- traverse :: (a -> f b) -> Tree a -> f (Tree b)
   traverse _ Leaf         = pure Leaf
   traverse f (Node x l r) = Node <$> f x <*> traverse f l <*> traverse f r
 ----------------------------------------------------
 newtype Const a b = Const { getConst :: a }
 
-instance Functor (Const b) where
-  -- (b -> c) -> Const a b -> Const a c
+instance Functor (Const a) where
+-- (b -> c) -> Const a b -> Const a c
   fmap _ (Const a) = Const a
 
-instance Monoid b => Applicative (Const b) where
-  -- pure :: b -> Const a b
+instance Monoid a => Applicative (Const a) where
+-- pure :: b -> Const a b
   pure _              = Const mempty
+-- (<*>) :: Const a (b -> c) -> Const a b -> Const a c
   Const f <*> Const a = Const $ f `mappend` a
 
-instance Foldable (Const b) where
-  -- foldr :: (a -> c -> c) -> c -> Const a b -> c
+instance Foldable (Const a) where
+-- foldr :: (b -> c -> c) -> c -> Const a b -> c
   foldr _ z _  = z
 
-instance Traversable (Const b) where
-  -- traverse :: (a -> f c) -> Const a b -> f (Const c a)
+instance Traversable (Const a) where
+-- traverse :: (a -> f c) -> Const a b -> f (Const c a)
   traverse _ (Const a) = pure $ Const a
 --------------------------------------------
 data Tuple a b = Tuple a b
@@ -104,9 +105,9 @@ instance Monoid a => Applicative (Tuple a) where
   Tuple a b <*> Tuple a2 b2 = Tuple (a `mappend` a2) (b b2)
 
 instance Foldable (Tuple a) where
-  -- foldr :: (b -> c -> c) -> c -> Tuple a b -> c
+-- foldr :: (b -> c -> c) -> c -> Tuple a b -> c
   foldr f z (Tuple _ b) = f b z
 
 instance Traversable (Tuple a) where
-  -- traverse :: (b -> f c) -> Tuple a b -> f (Tuple a c)
+-- traverse :: (b -> f c) -> Tuple a b -> f (Tuple a c)
   traverse f (Tuple a b) = Tuple a <$> f b
