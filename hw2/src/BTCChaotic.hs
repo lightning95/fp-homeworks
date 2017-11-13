@@ -60,7 +60,7 @@ instance Functor Tree where
 
 instance Applicative Tree where
   pure x                      = Node x Leaf Leaf
-  Leaf         <*> _          = Leaf
+  Leaf         <*> x          = x
   _            <*> Leaf       = Leaf
   Node f fl fr <*> Node x l r = Node (f x) (fl <*> l) (fr <*> r)
 

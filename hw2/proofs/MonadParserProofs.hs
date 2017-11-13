@@ -7,7 +7,7 @@ module MonadParserProofs where
 
 -- functor laws
 -- 1) fmap id        ==  id
--- 2) (fmap (f . g)  ==  fmap f . fmap g)
+-- 2) fmap (f . g)  ==  fmap f . fmap g
 
 -- fmap id (Parser p)
 --   = Parser $ fmap (first id) . p

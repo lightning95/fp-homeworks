@@ -13,24 +13,7 @@ module BTCFishesJoin
 import           Data.Function (flip, (.))
 import           Data.Functor  (Functor(..))
 
-class Monad m where
-  return     :: a -> m a
-  (>>=)      :: m a -> (a -> m b) -> m b
-
-class MonadFish m where
-  returnFish :: a -> m a
-  (>=>)      :: (a -> m b) -> (b -> m c) -> (a -> m c)
-               -- m b -> (b -> m c) -> m (m c)
-               -- m (m a) -> m a
----------------------------------
-class MonadJoin m where
-  returnJoin :: a -> m a
-  join       :: m (m a) -> m a
-             -- (m a) -> (a -> m b) -> m b
-             -- m a -> (a -> m b) -> m (m b)
-
 -- instance Monad m => Functor m where
--- -- fmap :: (a -> b) -> m a -> m b
 --   fmap f m = m >>= (return . f)
 
 -- LAWS MONAD
@@ -38,6 +21,7 @@ class MonadJoin m where
 -- 2. return a >>= f  ≡ f a
 -- 3. (m >>= f) >>= g ≡ m >>= (\x -> f x >>= g)
 
+-- LAWS FUNCTOR
 -- 1) fmap id a       ==  id a
 -- 2) fmap (f . g) a  ==  (fmap f . fmap g) a
 
@@ -49,9 +33,22 @@ class MonadJoin m where
 --    = a >>= (return . (f . g))
 --
 --    (fmap f . fmap g) a
---    = ((\x -> x >>= (return . f)) . (\y -> y >>= (return . g))) a
---    = ((\y -> y >>= (return . g)) >>= (return . f)) a
---    = 
+--    = fmap f (fmap g a)
+--    = fmap f (a >>= (return . g))
+--    = (a >>= (return . g)) >>= (return . f)
+--    =  a >>= (\x -> (return . g) x >>= (return . f))
+--    =  a >>= (\x -> return (g x) >>= (return . f))
+--    =  a >>= (\x -> (return . f) (g x))
+--    =  a >>= (\x -> (return . f . g) x)
+--    =  a >>= (return . (f . g))
+
+class MonadJoin m where
+  returnJoin :: a -> m a
+  join       :: m (m a) -> m a
+
+class Monad m where
+  return     :: a -> m a
+  (>>=)      :: m a -> (a -> m b) -> m b
 
 --`blackbird` by Amar Shah
 (...) :: (b -> c) -> (a -> a1 -> b) -> a -> a1 -> c
@@ -77,6 +74,9 @@ instance (Functor m, MonadJoin m) => Monad m where
 --    = (join . fmap returnJoin) m           (MONADJOIN 2)
 --    = id m
 --    = m
+class MonadFish m where
+  returnFish :: a -> m a
+  (>=>)      :: (a -> m b) -> (b -> m c) -> (a -> m c)
 
 instance (Functor m, MonadJoin m) => MonadFish m where
   returnFish = returnJoin
