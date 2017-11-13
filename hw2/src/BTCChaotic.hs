@@ -59,8 +59,8 @@ instance Functor Tree where
   fmap f (Node x l r) = Node (f x) (fmap f l) (fmap f r)
 
 instance Applicative Tree where
-  pure x                      = Node x Leaf Leaf
-  Leaf         <*> x          = x
+  pure x                      = Node x (pure x) (pure x)
+  Leaf         <*> _          = Leaf
   _            <*> Leaf       = Leaf
   Node f fl fr <*> Node x l r = Node (f x) (fl <*> l) (fr <*> r)
 
