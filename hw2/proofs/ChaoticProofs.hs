@@ -129,9 +129,22 @@ module ChaoticProofs where
 --   = foldr mappend mempty $ Identity $ f x
 --   = f x `mappend` mempty
 ----------------------------------
--- naturality
--- t . traverse f = traverse (t . f) for every applicative transformation t
+-- instance Traversable Identity where
+--   traverse f (Identity x) = Identity <$> f x
 
+-- naturality
+-- t . traverse f          = traverse (t . f)    for every applicative transformation t
+--    = (t . traverse f) x'
+--    = t (Identity <$> f x)
+--    = t (pure Identity <*> f x)
+--    = t (pure Identity) <*> t (f x)
+--    = pure Identity <*> t (f x)
+--    = fmap Identity (t (f x))
+--    = Identity <$> (t (f x))
+
+-- traverse (t . f) x'
+--   = Identity <$> (t . f) x
+--   = Identity <$> t (f x)
 
 -----------------------------------
 -- instance Traversable Tree where
@@ -139,12 +152,23 @@ module ChaoticProofs where
 --   traverse f (Node x l r) = Node <$> f x <*> traverse f l <*> traverse f r
 
 -- identity
--- traverse Identity                     = Identity
+-- traverse Identity x                    = Identity x
 -- traverse Identity Leaf
---   = pure Leaf
+--   = Identity Leaf
+
+-- traverse Identity Node x l r           = Identity $ Node x l r
+--   = Node <$> Identity x <*> traverse Identity l <*> traverse Identity r
+--   = Identity $ Node x l r
 -----------------------------------
+-- instance Traversable (Tuple a) where
+--   traverse f (Tuple a b) = Tuple a <$> f b
+
+-- instance Functor (Tuple a) where
+--   fmap f (Tuple a b) = Tuple a $ f b
 
  -- newtype Compose f g a = Compose (f (g a))
 
 -- composition
--- traverse (Compose . fmap g . f)        = Compose . fmap (traverse g) . traverse f
+-- traverse (Compose . fmap g . f)  t       = (Compose . fmap (traverse g) . traverse f) t
+--    = Tuple a <$> (Compose . fmap g . f) b
+--    = 
