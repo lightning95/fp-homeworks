@@ -20,7 +20,7 @@ module OptionalMonads
 
 import           Control.Applicative ((<|>))
 import qualified Control.Category    as Cat (Category (..))
-import           Control.Monad       (liftM2, replicateM, (>=>))
+import           Control.Monad       (liftM2, (>=>))
 import           Data.Maybe          (fromMaybe, isJust)
 
 data Expr = Const Int
@@ -86,6 +86,7 @@ isDefinedAt = isJust ... apply
 
 orElse :: (a ~> b) -> (a ~> b) -> a ~> b
 orElse f g = partial $ liftM2 (<|>) (f `apply`) (g `apply`)
+
 -----------  partial $ \x -> on M.orElse (`apply` x) f g
 -- Create a new partial function where the domain is the combination
 -- of both partial functions. Priority is given to the first partial function
@@ -95,15 +96,15 @@ instance Cat.Category (~>) where
   id    = partial Just
   g . f = partial $ (f `apply`) >=> (g `apply`)
 --   g . f = partial $ \x -> apply f x >>= (g `apply`)
-
 ----------------------------
 bin :: Int -> [ [ Int ] ]
-bin = flip replicateM [ 0, 1 ]
+bin 0 = [ [] ]
+bin n = bin (n - 1) >>= \x -> [0 : x, 1 : x]
 
 combinations :: Int -> Int -> [ [ Int ] ]
 combinations _ 0 = [ [] ]
 combinations 0 _ = []
-combinations n k = ((++ [n]) <$> combinations (n - 1) (k - 1)) ++ combinations (n - 1) k
+combinations n k = (combinations (n - 1) (k - 1) >>= pure . (++ [n])) ++ combinations (n - 1) k
 
 permutations :: forall a . [ a ] -> [ [ a ] ]
 permutations []       = [ [] ]

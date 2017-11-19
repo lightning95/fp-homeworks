@@ -19,7 +19,9 @@ spec = do
   it "doAll" $ do
     doAll input `shouldBe` [LE "x" [C 8], LE "y" [C 16], LE "z" [C 32]]
     doAll input2 `shouldBe` [LE "kek" [C 6], LE "lol" [C 1012], LE "lol2" [C 11019]]
-    -- return (doAll inputWithNoValue) `shouldThrow` anyException
+  it "show" $ do
+    map show (doAll input) `shouldBe` ["let x = 8", "let y = 16", "let z = 32"]
+    map show (doAll input2) `shouldBe` ["let kek = 6", "let lol = 1012", "let lol2 = 11019"]
 
 main :: IO ()
 main = hspec spec

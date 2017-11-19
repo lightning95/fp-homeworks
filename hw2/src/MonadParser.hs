@@ -7,6 +7,7 @@ module MonadParser
   , parseInput
   , optimize
   , doAll
+  , getExprs
   , LetExpr(..)
   , Sum(..)
   , Ident

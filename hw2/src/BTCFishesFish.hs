@@ -49,7 +49,7 @@ instance MonadFish m => Monad     m where
 instance MonadFish m => MonadJoin m where
   returnJoin = returnFish
   join a     = (const a >=> id) ()
-
+-- \x -> const a >>= return id
 -- LAWS
 -- 1. (f >=> returnFish) a ≡ f a
 -- 2. (returnFish >=> f) a ≡ f a

@@ -47,6 +47,7 @@ instance Foldable (Either a) where
   foldr f z (Right y) = f y z
 
 instance Traversable (Either a) where
+--(Traversable t, Applicative f) => (a -> f b) -> Either c a -> f (Either c b)
   traverse _ (Left x)  = pure $ Left x
   traverse f (Right y) = Right <$> f y
 ------------------------------------
@@ -101,7 +102,7 @@ instance Functor (Tuple a) where
   fmap f (Tuple a b) = Tuple a $ f b
 
 instance Monoid a => Applicative (Tuple a) where
-  pure                      = Tuple mempty
+  pure                    x = Tuple mempty x
   Tuple a b <*> Tuple a2 b2 = Tuple (a `mappend` a2) (b b2)
 
 instance Foldable (Tuple a) where

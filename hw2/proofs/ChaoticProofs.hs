@@ -166,9 +166,10 @@ module ChaoticProofs where
 -- instance Functor (Tuple a) where
 --   fmap f (Tuple a b) = Tuple a $ f b
 
- -- newtype Compose f g a = Compose (f (g a))
+-- newtype Compose f g a = Compose (f (g a))
 
 -- composition
 -- traverse (Compose . fmap g . f)  t       = (Compose . fmap (traverse g) . traverse f) t
 --    = Tuple a <$> (Compose . fmap g . f) b
---    = 
+--    = Tuple a <$> (Compose . fmap g . f)
+--    = Tuple a 
