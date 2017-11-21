@@ -2,9 +2,10 @@
 {-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE MultiParamTypeClasses      #-}
 {-# LANGUAGE PartialTypeSignatures      #-}
+{-# LANGUAGE ScopedTypeVariables        #-}
 {-# LANGUAGE TypeSynonymInstances       #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 
 module Expr
   ( Expr(..)
@@ -15,11 +16,11 @@ module Expr
   , eval
   ) where
 
+import           Control.Monad.Error.Class  (MonadError (..))
+import           Control.Monad.Reader.Class (MonadReader (..), asks, local)
 import           Control.Monad.Trans.Reader (ReaderT (..))
-import Control.Monad.Reader.Class (MonadReader(..), asks, local)
 import           Data.Either.Utils          (maybeToEither)
 import qualified Data.Map.Strict            as Map (Map, insert, lookup)
-import Control.Monad.Error.Class(MonadError(..))
 
 type Ident = String
 
