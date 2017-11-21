@@ -1,13 +1,25 @@
-{-# LANGUAGE ExplicitForAll       #-}
-{-# LANGUAGE FlexibleInstances    #-}
-{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE ExplicitForAll             #-}
+{-# LANGUAGE FlexibleContexts           #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE PartialTypeSignatures      #-}
+{-# LANGUAGE TypeSynonymInstances       #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
-module Expr where
+module Expr
+  ( Expr(..)
+  , ExprEval(..)
+  , Ident
+  , Bindings
+  , EvalError
+  , eval
+  ) where
 
-import           Control.Applicative  (liftA2)
-import           Control.Monad.Reader (Reader, asks, local)
-import           Data.Either.Utils    (maybeToEither)
-import qualified Data.Map.Strict      as Map (Map, lookup, insert)
+import           Control.Monad.Trans.Reader (ReaderT (..))
+import Control.Monad.Reader.Class (MonadReader(..), asks, local)
+import           Data.Either.Utils          (maybeToEither)
+import qualified Data.Map.Strict            as Map (Map, insert, lookup)
+import Control.Monad.Error.Class(MonadError(..))
 
 type Ident = String
 
@@ -24,36 +36,43 @@ data Expr = Const Int
 type Bindings = Map.Map String Int
 
 data EvalError = DivisionByZero
-               | PowerToNegative
+               | PowerToNegative Int
                | UnknownIdentifier String
                deriving (Show, Eq)
 
-type Result = Either EvalError Int
+newtype ExprEval a = ExprEval
+  { runExprEval :: ReaderT Bindings (Either EvalError) a
+  } deriving (Functor, Applicative, Monad, MonadReader Bindings, MonadError EvalError)
 
-evalR :: Expr -> Reader Bindings Result
-evalR (Const x) = pure $ pure x
-evalR (Sum x y) = liftA2 (+) <$> evalR x <*> evalR y
-evalR (Sub x y) = liftA2 (-) <$> evalR x <*> evalR y
-evalR (Mul x y) = liftA2 (*) <$> evalR x <*> evalR y
-evalR (Div x y) = liftA2 div <$> evalR x <*> right
+eval :: forall m .
+        ( Monad m
+        , MonadReader Bindings m
+        , MonadError EvalError m
+        )
+     => Expr -> m Int
+eval (Const x) = pure x
+eval (Sum x y) = (+) <$> eval x <*> eval y
+eval (Sub x y) = (-) <$> eval x <*> eval y
+eval (Mul x y) = (*) <$> eval x <*> eval y
+eval (Div x y) = div <$> eval x <*> right
   where
-    right :: Reader Bindings Result
+    right :: m Int
     right = do
-      res <- evalR y
-      pure $ case res of
-        Right 0 -> Left DivisionByZero
-        r       -> r
-evalR (Pow x y) = do
-  left  <- evalR x
-  right <- evalR y
-  let right2 = case right of
-        Right r | r < 0 -> Left PowerToNegative
-        e               -> e
-  pure ((^) <$> left <*> right2)
-evalR (Var name) = asks $ \b ->
-  maybeToEither (UnknownIdentifier name) (Map.lookup name b)
-evalR (Loc name val expr) = do
-  res <- evalR val
-  case res of
-    l@(Left _) -> pure l
-    Right r    -> local (Map.insert name r) (evalR expr)
+      res <- eval y
+      if res == 0 then
+        throwError DivisionByZero
+      else
+        pure res
+eval (Pow x y) = do
+  left  <- eval x
+  right <- eval y
+  if right < 0 then
+    throwError $ PowerToNegative right
+  else
+    pure $ left ^ right
+eval (Var name) = do
+  res <- asks (Map.lookup name)
+  maybeToEither (UnknownIdentifier name) res
+eval (Loc name val expr) = do
+  res <- eval val
+  local (Map.insert name res) (eval expr)

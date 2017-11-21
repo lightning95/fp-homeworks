@@ -6,9 +6,9 @@ description:         Task 3 for FP ITMO course
 homepage:            https://github.com/username/TemplateHW/tree/master/hw3#readme
 license:             MIT
 license-file:        LICENSE
-author:              Your Name
-maintainer:          example@gmail.com
-copyright:           2017 Your Name
+author:              Aydar Gizatullin
+maintainer:          aydar.gizatullin@gmail.com
+copyright:           2017 Aydar Gizatullin
 
 category:            Web
 build-type:          Simple
@@ -20,10 +20,12 @@ library
   hs-source-dirs:      src
   exposed-modules:     Expr
   ghc-options:         -Wall
-  build-depends:       base >= 4.9 && < 5,
-                       mtl >= 2.2.1,
-                       MissingH,
-                       containers
+  build-depends:       MissingH
+                     , base >= 4.9 && < 5
+                     , containers
+                     , megaparsec
+                     , mtl >= 2.2.1
+                     , transformers >= 0.5.2.0
   default-language:    Haskell2010
 
 executable hw3
@@ -33,6 +35,7 @@ executable hw3
   build-depends:       base
                      , hw3
                      , mtl >= 2.2.1
+                     , transformers >= 0.5.2.0
   default-language:    Haskell2010
 
 test-suite hw3-test
@@ -40,7 +43,9 @@ test-suite hw3-test
   hs-source-dirs:      test
   main-is:             Spec.hs
   build-depends:       base
+                     , hspec-megaparsec
                      , hw3
                      , mtl >= 2.2.1
+                     , transformers >= 0.5.2.0
   ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
