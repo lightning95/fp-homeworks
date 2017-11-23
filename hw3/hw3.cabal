@@ -18,22 +18,12 @@ tested-with:         GHC == 8.0.1
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Expr
+  exposed-modules:     Expr, ExprParser
   ghc-options:         -Wall
   build-depends:       MissingH
                      , base >= 4.9 && < 5
                      , containers
-                     , megaparsec
-                     , mtl >= 2.2.1
-                     , transformers >= 0.5.2.0
-  default-language:    Haskell2010
-
-executable hw3
-  hs-source-dirs:      app
-  main-is:             Main.hs
-  ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
-  build-depends:       base
-                     , hw3
+                     , megaparsec >= 6.2.0
                      , mtl >= 2.2.1
                      , transformers >= 0.5.2.0
   default-language:    Haskell2010
@@ -45,6 +35,7 @@ test-suite hw3-test
   build-depends:       base
                      , hspec-megaparsec
                      , hw3
+                     , megaparsec >= 6.2.0
                      , mtl >= 2.2.1
                      , transformers >= 0.5.2.0
   ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
