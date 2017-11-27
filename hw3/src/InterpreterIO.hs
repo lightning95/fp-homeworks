@@ -12,7 +12,7 @@ module InterpreterIO
   ) where
 
 import qualified AExpr                      as A (AExprEval (..), Bindings,
-                                                  eval, Ident)
+                                                  Ident, eval)
 import           Control.Monad.Error.Class  (MonadError (..))
 import           Control.Monad.IO.Class     (MonadIO (..))
 import           Control.Monad.State.Class  (MonadState (..), modify)
@@ -20,9 +20,10 @@ import           Control.Monad.State.Class  (MonadState (..), modify)
 import           Control.Monad.Trans.Except (ExceptT (..), runExceptT)
 import           Control.Monad.Trans.Reader (ReaderT (..))
 
-import           Control.Monad.Trans.State  (State (), StateT (..))
-import qualified Data.Map.Strict            as Map (empty, insert, lookup)
-import           Vars                       (LangError (..), createVar, reassignVar)
+import           Control.Monad.Trans.State  (StateT (..))
+import qualified Data.Map.Strict            as Map (empty, insert)
+import           Vars                       (LangError (..), createVar,
+                                             reassignVar)
 import           VarsParser                 (Assign (..))
 
 newtype Lang a = Lang
@@ -62,7 +63,7 @@ writeVar :: forall m .
           ( MonadIO m
           )
          => Integer -> m ()
-writeVar = liftIO . putStrLn . show
+writeVar = liftIO . print
 
 readVar :: forall m .
          ( MonadIO m
@@ -70,5 +71,5 @@ readVar :: forall m .
          )
         => A.Ident -> m ()
 readVar name = do
-  val <- liftIO $ getLine
+  val <- liftIO getLine
   modify $ Map.insert name (read val)

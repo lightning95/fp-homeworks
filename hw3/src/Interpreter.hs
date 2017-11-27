@@ -1,7 +1,6 @@
 {-# LANGUAGE ExplicitForAll        #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
-
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE ScopedTypeVariables   #-}
@@ -25,7 +24,12 @@ import           VarsParser                 (Assign (..))
 interpret :: [Assign] -> Either LangError ((), A.Bindings)
 interpret s = runStateT (runVars $ interpret' s) Map.empty
 
-interpret' :: [Assign] -> Vars ()
+interpret' :: forall m .
+            ( Monad m
+            , MonadError LangError m
+            , MonadState A.Bindings m
+            )
+           => [Assign] -> m ()
 interpret' []     = pure ()
 interpret' (x:xs) = do
   s <- get
@@ -33,6 +37,7 @@ interpret' (x:xs) = do
     (e, f) = case x of
         (Crt ident expr)  -> (expr, createVar ident)
         (Rsgn ident expr) -> (expr, reassignVar ident)
+        _                 -> undefined
   val <- case runReaderT (A.runAExprEval $ A.eval e) s of
       Right r -> pure r
       Left er -> throwError $ EV er
