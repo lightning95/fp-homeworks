@@ -22,5 +22,5 @@ main = do
     linez = rights $ map (parse assignParser "") unpacked
   res <- interpretIO linez
   case res of
-    Left e       -> print e
-    Right (_, b) -> print b
+    Left e  -> print e
+    Right b -> print b
