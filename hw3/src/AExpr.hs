@@ -7,12 +7,12 @@
 {-# LANGUAGE ScopedTypeVariables        #-}
 {-# LANGUAGE TypeSynonymInstances       #-}
 
-module Expr
-  ( Expr(..)
-  , ExprEval(..)
+module AExpr
+  ( AExpr (..)
+  , AExprEval (..)
   , Ident
   , Bindings
-  , EvalError
+  , EvalError(..)
   , eval
   ) where
 
@@ -24,33 +24,34 @@ import qualified Data.Map.Strict            as Map (Map, insert, lookup)
 
 type Ident = String
 
-data Expr = Const Integer
-          | Var Ident
-          | Sum Expr Expr
-          | Sub Expr Expr
-          | Mul Expr Expr
-          | Div Expr Expr
-          | Pow Expr Expr
-          | Loc Ident Expr Expr
-          deriving (Show, Eq)
+type Bindings = Map.Map Ident Integer
 
-type Bindings = Map.Map String Integer
+data AExpr = Const Integer
+          | Var Ident
+          | Sum AExpr AExpr
+          | Sub AExpr AExpr
+          | Mul AExpr AExpr
+          | Div AExpr AExpr
+          | Pow AExpr AExpr
+          | Loc Ident AExpr AExpr
+          deriving (Show, Eq)
 
 data EvalError = DivisionByZero
                | PowerToNegative Integer
-               | UnknownIdentifier String
+               | UnknownIdentifier Ident
                deriving (Show, Eq)
 
-newtype ExprEval a = ExprEval
-  { runExprEval :: ReaderT Bindings (Either EvalError) a
-  } deriving (Functor, Applicative, Monad, MonadReader Bindings, MonadError EvalError)
+newtype AExprEval a = AExprEval
+  { runAExprEval :: ReaderT Bindings (Either EvalError) a
+  } deriving (Functor, Applicative, Monad, MonadReader Bindings,
+    MonadError EvalError)
 
 eval :: forall m .
         ( Monad m
         , MonadReader Bindings m
         , MonadError EvalError m
         )
-     => Expr -> m Integer
+     => AExpr -> m Integer
 eval (Const x) = pure x
 eval (Sum x y) = (+) <$> eval x <*> eval y
 eval (Sub x y) = (-) <$> eval x <*> eval y

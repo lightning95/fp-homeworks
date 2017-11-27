@@ -18,11 +18,16 @@ tested-with:         GHC == 8.0.1
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Expr, ExprParser
+  exposed-modules:     AExpr
+                     , AExprParser
+                     , Vars
+                     , VarsParser
+                     , Interpreter
   ghc-options:         -Wall
   build-depends:       MissingH
                      , base >= 4.9 && < 5
                      , containers
+                     , hspec-megaparsec >= 1.0.0
                      , megaparsec >= 6.2.0
                      , mtl >= 2.2.1
                      , transformers >= 0.5.2.0
@@ -32,8 +37,14 @@ test-suite hw3-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
+  other-modules:       AExprSpec
+                     , AExprParserSpec
+                     , VarsParserSpec
+                     , InterpreterSpec
   build-depends:       base
-                     , hspec-megaparsec
+                     , containers
+                     , hspec >= 2.4.4
+                     , hspec-megaparsec >= 1.0.0
                      , hw3
                      , megaparsec >= 6.2.0
                      , mtl >= 2.2.1
