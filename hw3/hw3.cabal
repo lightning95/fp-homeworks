@@ -23,6 +23,7 @@ library
                      , Vars
                      , VarsParser
                      , Interpreter
+                     , InterpreterIO
   ghc-options:         -Wall
   build-depends:       MissingH
                      , base >= 4.9 && < 5
@@ -30,7 +31,23 @@ library
                      , hspec-megaparsec >= 1.0.0
                      , megaparsec >= 6.2.0
                      , mtl >= 2.2.1
+                     , text >= 1.2.2.2
                      , transformers >= 0.5.2.0
+  default-language:    Haskell2010
+
+executable hw3
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       MissingH
+                     , base >= 4.9 && < 5
+                     , containers
+                     , hspec-megaparsec >= 1.0.0
+                     , megaparsec >= 6.2.0
+                     , mtl >= 2.2.1
+                     , text >= 1.2.2.2
+                     , transformers >= 0.5.2.0
+                     , hw3
   default-language:    Haskell2010
 
 test-suite hw3-test
@@ -48,6 +65,7 @@ test-suite hw3-test
                      , hw3
                      , megaparsec >= 6.2.0
                      , mtl >= 2.2.1
+                     , text >= 1.2.2.2
                      , transformers >= 0.5.2.0
   ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010

@@ -11,17 +11,17 @@ spec :: Spec
 spec =
   it "interpret" $ do
     interpret [] `shouldBe`
-      Right ((), emp)
+      Right emp
     interpret [Crt "x" $ Const 2] `shouldBe`
-      Right ((), ins "x" 2 emp)
+      Right (ins "x" 2 emp)
     interpret [Crt "x" $ Const 2 `Sum` Const 3] `shouldBe`
-      Right ((), ins "x" 5 emp)
+      Right (ins "x" 5 emp)
     interpret [Crt "x" $ Const 2, Crt "y" $ Var "x"]
-      `shouldBe` Right ((), ins "x" 2 $ ins "y" 2 emp)
+      `shouldBe` Right (ins "x" 2 $ ins "y" 2 emp)
     interpret [Crt "x" $ Const 2, Rsgn "x" $ Var "x" `Mul` Const 2]
-      `shouldBe` Right ((), ins "x" 4 emp)
+      `shouldBe` Right (ins "x" 4 emp)
     interpret [Crt "x" $ "x" `Loc` Const 2 $ Var "x"]
-      `shouldBe` Right ((), ins "x" 2 emp)
+      `shouldBe` Right (ins "x" 2 emp)
     interpret [Rsgn "x" $ Const 2] `shouldBe`
       Left (V.UnknownIdentifier "x")
     interpret [Crt "x" $ Const 2, Crt "x" $ Const 3] `shouldBe`

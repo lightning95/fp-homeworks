@@ -15,14 +15,14 @@ import qualified AExpr                      as A (AExprEval (..), Bindings,
 import           Control.Monad.Error.Class  (MonadError (..))
 import           Control.Monad.State.Class  (MonadState (..))
 import           Control.Monad.Trans.Reader (ReaderT (..))
-import           Control.Monad.Trans.State  (StateT (..))
+import           Control.Monad.Trans.State  (execStateT)
 import qualified Data.Map.Strict            as Map (empty)
 import           Vars                       (LangError (..), Vars (..),
                                              createVar, reassignVar)
 import           VarsParser                 (Assign (..))
 
-interpret :: [Assign] -> Either LangError ((), A.Bindings)
-interpret s = runStateT (runVars $ interpret' s) Map.empty
+interpret :: [Assign] -> Either LangError A.Bindings
+interpret s = execStateT (runVars $ interpret' s) Map.empty
 
 interpret' :: forall m .
             ( Monad m

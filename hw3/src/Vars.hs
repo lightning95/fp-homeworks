@@ -40,8 +40,8 @@ createVar name val = do
   inner <- get
   case Map.lookup name inner of
     Just _ -> throwError $ DuplicateIdentifier name
-    _      -> pure ()
-  modify $ Map.insert name val
+    _      -> modify $ Map.insert name val
+
 
 reassignVar :: forall m .
              ( Monad m
@@ -52,6 +52,5 @@ reassignVar :: forall m .
 reassignVar name val = do
   inner <- get
   case Map.lookup name inner of
-    Just _ -> pure ()
+    Just _ -> modify $ Map.insert name val
     _      -> throwError $ UnknownIdentifier name
-  modify $ Map.insert name val

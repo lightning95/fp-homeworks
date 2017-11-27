@@ -20,8 +20,8 @@ import           Control.Monad              (void)
 import           Data.Void                  (Void)
 import           Text.Megaparsec            (Parsec, between, many,
                                              notFollowedBy, try, (<|>))
-import           Text.Megaparsec.Char       (alphaNumChar, letterChar,
-                                             space1, string)
+import           Text.Megaparsec.Char       (alphaNumChar, letterChar, space1,
+                                             string)
 import qualified Text.Megaparsec.Char.Lexer as L (decimal, lexeme, space,
                                                   symbol)
 import           Text.Megaparsec.Expr       (Operator (..), makeExprParser)
@@ -47,7 +47,7 @@ rword :: String -> Parser ()
 rword w = lexeme (string w *> notFollowedBy alphaNumChar)
 
 rws :: [String] -- list of reserved words
-rws = ["let", "in"]
+rws = ["let", "in", "mut"]
 
 identifier :: Parser Ident
 identifier = (lexeme . try) (p >>= check)
