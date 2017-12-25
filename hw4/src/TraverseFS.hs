@@ -7,14 +7,14 @@ module TraverseFS
   , fileM
   ) where
 
-import           Control.Lens (Traversal', filtered, traversed, (^.))
-import           FSLenses     (FS, contents, name)
+import           Control.Lens (Traversal', filtered, traversed, (^?), _1)
+import           FSLenses     (FS, contents, name, _Dir, _File)
 
 cd :: FilePath -> Traversal' FS FS
-cd path = contents.traversed.filtered (\x -> x^.name == path)
+cd path = contents.traversed.filtered (\x -> x ^? _Dir . _1 == Just path)
 
 ls :: Traversal' FS FilePath
 ls = contents.traversed.name
 
-fileM :: FilePath -> Traversal' FS FS
-fileM n = contents.traversed.filtered (\x -> x^.name == n)
+fileM :: FilePath -> Traversal' FS FilePath
+fileM n = contents.traversed.filtered (\x-> x ^? _File == Just n).name

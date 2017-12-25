@@ -8,6 +8,8 @@ module FSLenses
   , file
   , name
   , contents
+  , _File
+  , _Dir
   ) where
 
 import           Control.Conditional (ifM)
