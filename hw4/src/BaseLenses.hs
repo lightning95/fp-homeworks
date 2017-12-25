@@ -17,6 +17,8 @@ module BaseLenses
   , choosing
   , (<%~)
   , (<<%~)
+  , _1
+  , _2
   ) where
 
 import           Control.Applicative   (Const (..))

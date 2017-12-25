@@ -25,15 +25,16 @@ library
                      , TraverseFS
                      , ChangeFS
   ghc-options:         -Wall
-  build-depends:       cond >= 0.4.1.1
+  build-depends:       base >= 4.9 && < 5
+                     , comonad >= 5.0.2
+                     , cond >= 0.4.1.1
                      , directory >= 1.2.0.0
                      , filepath >= 1.4.1.1
                      , filesystem-trees >= 0.1.0.6
                      , lens >= 4.15.4
+                     , pointed >= 5
                      , template-haskell >= 2.11.1.0
                      , text >= 1.2.2.2
-                     , pointed >= 5
-                     , base >= 4.9 && < 5
   default-language:    Haskell2010
 
 executable hw4
@@ -41,6 +42,7 @@ executable hw4
   main-is:             Main.hs
   ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base >= 4.9 && < 5
+                     , comonad >= 5.0.2
                      , hw4
   default-language:    Haskell2010
 
@@ -48,7 +50,18 @@ test-suite hw4-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  other-modules:       
-  build-depends:       base                     
-  ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
+  other-modules:       BaseLensesSpec
+                     , TmpHsSpec
+                     , TraverseFSSpec
+                     , ChangeFSSpec
+  build-depends:       base
+                     , comonad >= 5.0.2
+                     , hspec >= 2.4.4
+                     , hw4
+                     , template-haskell >= 2.11.1.0
+                     , text >= 1.2.2.2
+                     , lens >= 4.15.4
+                     , filepath >= 1.4.1.1
+                     , cond >= 0.4.1.1                     
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010

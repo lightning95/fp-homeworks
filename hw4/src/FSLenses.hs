@@ -26,7 +26,7 @@ data FS = Dir
         }
         | File
         { _name     :: FilePath  -- название файла, не полный путь
-        } deriving (Show)
+        } deriving (Show, Eq)
 
 getDirectory :: FilePath -> IO FS
 getDirectory p = Dir p <$> getChildren p
