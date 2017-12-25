@@ -4,8 +4,19 @@ packages:
 - hw1
 - hw2
 - hw3
+- hw4
 
-extra-deps: [megaparsec-6.2.0, hspec-megaparsec-1.0.0, text-1.2.2.2]
+extra-deps: [ megaparsec-6.2.0
+            , hspec-megaparsec-1.0.0
+            , text-1.2.2.2
+            , template-haskell-2.11.1.0
+            , lens-4.15.4 
+            , cond-0.4.1.1
+            , directory-1.2.7.1
+            , filesystem-trees-0.1.0.6
+            , filepath-1.4.1.1
+            , pointed-5
+            ]
 
 flags: {}
 
